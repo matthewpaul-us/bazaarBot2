@@ -10,20 +10,19 @@ namespace EconomySim
 {
     public class DoranAndParberryEconomy : Economy
     {
-
 	    public DoranAndParberryEconomy()
 	    {
 		    var market = new Market("default",this);
 
-            MarketData data = GetMarketData();
-            market.init(data); // market.init(MarketData.fromJSON(Json.parse(Assets.getText("assets/settings.json")), getAgent));
-		    addMarket(market);
+            MarketData data = getMarketData();
+            market.Init(data); // market.init(MarketData.fromJSON(Json.parse(Assets.getText("assets/settings.json")), getAgent));
+		    AddMarket(market);
 	    }
 
-        private MarketData GetMarketData()
+        private MarketData getMarketData()
         {
             List<Good> goods = new List<Good>();
-	        List<AgentData>agentTypes = new List<AgentData>();
+	        List<AgentData> agentTypes = new List<AgentData>();
 	        List<BasicAgent> agents = new List<BasicAgent>();
 
             goods.Add(new Good("food", 0.5));
@@ -46,37 +45,37 @@ namespace EconomySim
                 new Dictionary<string,double>{{"food",1},{"tools",1},{"wood",0},{"work",0}},
                 null
                 );
-            agentTypes[0].inventory = ii; 
+            agentTypes[0].Inventory = ii; 
             ii = new InventoryData(20, //miner
                 new Dictionary<string, double> { { "food", 3 }, { "tools", 1 }, { "ore", 0 } },
                 new Dictionary<string, double> { { "food", 1 }, { "tools", 1 }, { "ore", 0 } },
                 null
                 );
-            agentTypes[1].inventory = ii;
+            agentTypes[1].Inventory = ii;
             ii = new InventoryData(20, //refiner
                 new Dictionary<string, double> { { "food", 3 }, { "tools", 1 }, { "ore", 5 } },
                 new Dictionary<string, double> { { "food", 1 }, { "tools", 1 }, { "ore", 0 } },
                 null
                 );
-            agentTypes[2].inventory = ii;
+            agentTypes[2].Inventory = ii;
             ii = new InventoryData(20, //woodcutter
                 new Dictionary<string, double> { { "food", 3 }, { "tools", 1 }, { "wood", 0 } },
                 new Dictionary<string, double> { { "food", 1 }, { "tools", 1 }, { "wood", 0 } },
                 null
                 );
-            agentTypes[3].inventory = ii;
+            agentTypes[3].Inventory = ii;
             ii = new InventoryData(20, //blacksmith
                 new Dictionary<string, double> { { "food", 3 }, { "tools", 1 }, { "metal", 5 }, { "ore", 0 } },
                 new Dictionary<string, double> { { "food", 1 }, { "tools", 0 }, { "metal", 0 }, { "ore", 0 } },
                 null
                 );
-            agentTypes[4].inventory = ii;
+            agentTypes[4].Inventory = ii;
             ii = new InventoryData(20, //worker
                 new Dictionary<string, double> { { "food", 3 }  },
                 new Dictionary<string, double> { { "food", 1 } },
                 null
                 );
-            agentTypes[5].inventory = ii;
+            agentTypes[5].Inventory = ii;
 
 
             int idc = 0;
@@ -85,7 +84,7 @@ namespace EconomySim
                 for (int i = 0; i < 5; i++)
                 {
                     agents.Add(getAgent(agentTypes[iagent]));
-                    agents[agents.Count - 1].id = idc++;
+                    agents[agents.Count - 1].Id = idc++;
                 }
             }
 
@@ -111,31 +110,31 @@ namespace EconomySim
         }
 
 
-	    public override void signalBankrupt(Market m, BasicAgent a)
+	    public override void SignalBankrupt(Market market, BasicAgent agent)
 	    {
-		    replaceAgent(m, a);
+		    replaceAgent(market, agent);
 	    }
 
 	    private void replaceAgent(Market market, BasicAgent agent)
 	    {
-		    var bestClass = market.getMostProfitableAgentClass();
+		    var bestClass = market.GetMostProfitableAgentClass();
 
 		    //Special case to deal with very high demand-to-supply ratios
 		    //This will make them favor entering an underserved market over
 		    //Just picking the most profitable class
-		    var bestGood = market.getHottestGood();
+		    var bestGood = market.GetHottestGood();
 
 		    if (bestGood != "")
 		    {
-			    var bestGoodClass = getAgentClassThatMakesMost(bestGood);
+			    var bestGoodClass = GetAgentClassThatMakesMost(bestGood);
 			    if (bestGoodClass != "")
 			    {
 				    bestClass = bestGoodClass;
 			    }
 		    }
 
-		    var newAgent = getAgent(market.getAgentClass(bestClass));
-		    market.replaceAgent(agent, newAgent);
+		    var newAgent = getAgent(market.GetAgentClass(bestClass));
+		    market.ReplaceAgent(agent, newAgent);
 	    }
 
 
@@ -164,7 +163,7 @@ namespace EconomySim
 	     * @param	good
 	     * @return
 	     */
-	    public String getAgentClassThatMakesMost(String good)
+	    public string GetAgentClassThatMakesMost(string good)
 	    {
             string res = "";
 		    if (good == "food" )      {res = "farmer";      }
@@ -208,20 +207,20 @@ namespace EconomySim
 
         private BasicAgent getAgent(AgentData data)
         {
-            data.logic = getLogic(data.logicName);
+            data.Logic = getLogic(data.logicName);
             return new Agent(0, data);
         }
 
-        private Logic getLogic(String str)
+        private Logic getLogic(string str)
         {
             switch (str)
             {
-                case "blacksmith": return new LogicBlacksmith();
-                case "farmer": return new LogicFarmer();
-                case "miner": return new LogicMiner();
-                case "refiner": return new LogicRefiner();
-                case "woodcutter": return new LogicWoodcutter();
-                case "worker": return new LogicWorker();
+                case "blacksmith": return new BlacksmithLogic();
+                case "farmer": return new FarmerLogic();
+                case "miner": return new MinerLogic();
+                case "refiner": return new RefinerLogic();
+                case "woodcutter": return new WoodcutterLogic();
+                case "worker": return new WorkerLogic();
             }
             return null;
         }

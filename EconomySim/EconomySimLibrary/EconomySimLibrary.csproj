@@ -45,17 +45,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Agent\Agent.cs" />
+    <Compile Include="Agent\AgentData.cs" />
     <Compile Include="Agent\BasicAgent.cs" />
     <Compile Include="Economy\Economy.cs" />
-    <Compile Include="Economy\MyEconomy.cs" />
+    <Compile Include="Economy\DoranAndParberryEconomy.cs" />
     <Compile Include="Goods\Good.cs" />
     <Compile Include="History\History.cs" />
+    <Compile Include="History\HistoryLog.cs" />
     <Compile Include="Inventory\Inventory.cs" />
     <Compile Include="Inventory\InventoryData.cs" />
+    <Compile Include="Logic\BlacksmithLogic.cs" />
+    <Compile Include="Logic\FarmerLogic.cs" />
     <Compile Include="Logic\Logic.cs" />
+    <Compile Include="Logic\MinerLogic.cs" />
+    <Compile Include="Logic\RefinerLogic.cs" />
+    <Compile Include="Logic\WoodcutterLogic.cs" />
+    <Compile Include="Logic\WorkerLogic.cs" />
     <Compile Include="Market\Market.cs" />
     <Compile Include="Market\MarketData.cs" />
     <Compile Include="Market\MarketReport.cs" />
+    <Compile Include="Math\Point.cs" />
     <Compile Include="Math\Quick.cs" />
     <Compile Include="Offers\Offer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

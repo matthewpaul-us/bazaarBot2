@@ -8,110 +8,110 @@ namespace EconomySim
 {
     public interface ISignalBankrupt
     {
-        void signalBankrupt(Market m, BasicAgent agent);
+        void SignalBankrupt(Market m, BasicAgent agent);
     }
 
     public class Market
     {
-	    public String name;
+	    public string Name;
 
 	    /**Logs information about all economic activity in this market**/
-	    public History history;
+	    public History History;
 
 	    /**Signal fired when an agent's money reaches 0 or below**/
-	    public ISignalBankrupt signalBankrupt;
+	    public ISignalBankrupt SignalBankrupt;
 
 
 	    /********PRIVATE*********/
 
-	    private int _roundNum = 0;
+	    private int roundNum = 0;
 
-	    private List<String> _goodTypes;		//list of string ids for all the legal commodities
-	    public BindingList<BasicAgent> _agents;
-	    public TradeBook _book;
-	    private Dictionary<String, AgentData> _mapAgents;
-	    private Dictionary<String, Good> _mapGoods;
+	    private List<string> goodTypes;		//list of string ids for all the legal commodities
+	    public BindingList<BasicAgent> agents;
+	    public TradeBook book;
+	    private Dictionary<string, AgentData> mapAgents;
+	    private Dictionary<string, Good> mapGoods;
         
         
         public Market(string name, ISignalBankrupt isb)
 	    {
-		    this.name = name;
+		    this.Name = name;
 
-		    history = new History();
-		    _book = new TradeBook();
-		    _goodTypes = new List<String>();
-		    _agents = new BindingList<BasicAgent>();
-		    _mapGoods = new Dictionary<String, Good>();
-		    _mapAgents = new Dictionary<String, AgentData>();
+		    History = new History();
+		    book = new TradeBook();
+		    goodTypes = new List<string>();
+		    agents = new BindingList<BasicAgent>();
+		    mapGoods = new Dictionary<string, Good>();
+		    mapAgents = new Dictionary<string, AgentData>();
 
-		    signalBankrupt = isb;//new TypedSignal<Market->BasicAgent->Void>();
+		    SignalBankrupt = isb;//new TypedSignal<Market->BasicAgent->Void>();
 	    }
 
-	    public void init(MarketData data)
+	    public void Init(MarketData data)
 	    {
 		    fromData(data);
 	    }
 
-	    public int numTypesOfGood()
+	    public int NumTypesOfGood()
 	    {
-		    return _goodTypes.Count;
+		    return goodTypes.Count;
 	    }
 
-	    public int numAgents()
+	    public int NumAgents()
 	    {
-		    return _agents.Count;
+		    return agents.Count;
 	    }
 
-	    public void replaceAgent(BasicAgent oldAgent, BasicAgent newAgent)
+	    public void ReplaceAgent(BasicAgent oldAgent, BasicAgent newAgent)
 	    {
-		    newAgent.id = oldAgent.id;
-		    _agents[oldAgent.id] = newAgent;
-		    oldAgent.destroy();
-		    newAgent.init(this);
+		    newAgent.Id = oldAgent.Id;
+		    agents[oldAgent.Id] = newAgent;
+		    oldAgent.Destroy();
+		    newAgent.Init(this);
 	    }
 
 	    //@:access(bazaarbot.agent.BasicAgent)    //dfs stub ????
-	    public void simulate(int rounds)
+	    public void Simulate(int rounds)
 	    {
 		    for (int round=0; round<rounds; round++)
 		    {
-			    foreach (var agent in _agents)
+			    foreach (var agent in agents)
 			    {
-				    agent.moneyLastRound = agent.money;
-				    agent.simulate(this);
+				    agent.MoneyLastRound = agent.Money;
+				    agent.Simulate(this);
 
-				    foreach (var commodity in _goodTypes)
+				    foreach (var commodity in goodTypes)
 				    {
-					    agent.generateOffers(this, commodity);
+					    agent.GenerateOffers(this, commodity);
 				    }
 			    }
 
-			    foreach (var commodity in _goodTypes)
+			    foreach (var commodity in goodTypes)
 			    {
 				    resolveOffers(commodity);
 			    }
                 var del = new List<BasicAgent>();
-			    foreach (var agent in _agents)
+			    foreach (var agent in agents)
 			    {
-                    if (agent.money <= 0) del.Add(agent);  
+                    if (agent.Money <= 0) del.Add(agent);  
 			    }
                 while (del.Count > 0)
                 {
-                    signalBankrupt.signalBankrupt(this, del[0]); //signalBankrupt.dispatch(this, agent);
+                    SignalBankrupt.SignalBankrupt(this, del[0]); //signalBankrupt.dispatch(this, agent);
                     del.RemoveAt(0);
                 }
-                _roundNum++;
+                roundNum++;
 		    }
 	    }
 
-	    public void ask(Offer offer)
+	    public void Ask(Offer offer)
 	    {
-		    _book.ask(offer);
+		    book.Ask(offer);
 	    }
 
-	    public void bid(Offer offer)
+	    public void Bid(Offer offer)
 	    {
-		    _book.bid(offer);
+		    book.Bid(offer);
 	    }
 
 	    /**
@@ -121,9 +121,9 @@ namespace EconomySim
 	     * @return
 	     */
 
-	    public double getAverageHistoricalPrice(String good, int range)
+	    public double GetAverageHistoricalPrice(string good, int range)
 	    {
-		    return history.prices.average(good, range);
+		    return History.Prices.Average(good, range);
 	    }
 
 	    /**
@@ -133,14 +133,14 @@ namespace EconomySim
 	     * @return
 	     */
 
-	    public String getHottestGood(double minimum = 1.5, int range = 10)
+	    public string GetHottestGood(double minimum = 1.5, int range = 10)
 	    {
-		    string best_market = "";
-            double best_ratio = -99999;// Math.NEGATIVE_INFINITY;
-		    foreach (var good in _goodTypes)
+		    string bestMarket = "";
+            double bestRatio = -99999;// Math.NEGATIVE_INFINITY;
+		    foreach (var good in goodTypes)
 		    {
-			    var asks = history.asks.average(good, range);
-			    var bids = history.bids.average(good, range);
+			    var asks = History.Asks.Average(good, range);
+			    var bids = History.Bids.Average(good, range);
 
 			    double ratio = 0;
 			    if (asks == 0 && bids > 0)
@@ -153,13 +153,13 @@ namespace EconomySim
 
 			    ratio = bids / asks;
 
-			    if (ratio > minimum && ratio > best_ratio)
+			    if (ratio > minimum && ratio > bestRatio)
 			    {
-				    best_ratio = ratio;
-				    best_market = good;
+				    bestRatio = ratio;
+				    bestMarket = good;
 			    }
 		    }
-		    return best_market;
+		    return bestMarket;
 	    }
 
 	    /**
@@ -169,23 +169,23 @@ namespace EconomySim
 	     * @return
 	     */
 
-	    public String getCheapestGood(int range, List<String> exclude = null)
+	    public string GetCheapestGood(int range, List<string> exclude = null)
 	    {
-            double best_price = -9999999;// Math.POSITIVE_INFINITY;
-		    string best_good = "";
-		    foreach (var g in _goodTypes)
+            double bestPrice = -9999999;// Math.POSITIVE_INFINITY;
+		    string bestGood = "";
+		    foreach (var g in goodTypes)
 		    {
 			    if (exclude == null || !exclude.Contains(g))
 			    {
-				    double price = history.prices.average(g, range);
-				    if (price < best_price)
+				    double price = History.Prices.Average(g, range);
+				    if (price < bestPrice)
 				    {
-					    best_price = price;
-					    best_good = g;
+					    bestPrice = price;
+					    bestGood = g;
 				    }
 			    }
 		    }
-		    return best_good;
+		    return bestGood;
 	    }
 
 	    /**
@@ -195,23 +195,23 @@ namespace EconomySim
 	     * @return
 	     */
 
-	    public String getDearestGood(int range, List<String> exclude= null)
+	    public string GetDearestGood(int range, List<string> exclude= null)
 	    {
-		    double best_price = 0;
-		    String best_good = "";
-		    foreach (var g in _goodTypes)
+		    double bestPrice = 0;
+		    string bestGood = "";
+		    foreach (var g in goodTypes)
 		    {
 			    if (exclude == null || !exclude.Contains(g))
 			    {
-				    var price = history.prices.average(g, range);
-				    if (price > best_price)
+				    var price = History.Prices.Average(g, range);
+				    if (price > bestPrice)
 				    {
-					    best_price = price;
-					    best_good = g;
+					    bestPrice = price;
+					    bestGood = g;
 				    }
 			    }
 		    }
-		    return best_good;
+		    return bestGood;
 	    }
 
 	    /**
@@ -219,13 +219,13 @@ namespace EconomySim
 	     * @param	range
 	     * @return
 	     */
-	    public String getMostProfitableAgentClass(int range= 10)
+	    public string GetMostProfitableAgentClass(int range= 10)
 	    {
             double best = -999999;// Math.NEGATIVE_INFINITY;
-		    String bestClass="";
-		    foreach (var className in _mapAgents.Keys)
+		    string bestClass="";
+		    foreach (var className in mapAgents.Keys)
 		    {
-			    double val = history.profit.average(className, range);
+			    double val = History.Profit.Average(className, range);
 			    if (val > best)
 			    {
 				    bestClass = className;
@@ -235,42 +235,43 @@ namespace EconomySim
 		    return bestClass;
 	    }
 
-	    public AgentData getAgentClass(String className)
+	    public AgentData GetAgentClass(string className)
 	    {
-		    return _mapAgents[className];
+		    return mapAgents[className];
 	    }
 
-	    public List<String> getAgentClassNames()
+	    public List<string> GetAgentClassNames()
 	    {
-		    var agentData = new List<String> ();
-		    foreach (var key in _mapAgents.Keys)
+		    var agentData = new List<string> ();
+		    foreach (var key in mapAgents.Keys)
 		    {
 			    agentData.Add(key);
 		    }
 		    return agentData;
 	    }
 
-	    public List<String> getGoods()
+	    public List<string> GetGoods()
 	    {
-            return new List<String>(_goodTypes);
+            return new List<string>(goodTypes);
 	    }
 
-	    public List<String> getGoods_unsafe()
+        // TODO: why is this unsafe????
+	    public List<string> GetGoodsUnsafe()
 	    {
-		    return _goodTypes;
+		    return goodTypes;
 	    }
 
-	    public Good getGoodEntry(String str)
+	    public Good GetGoodEntry(string str)
 	    {
-		    if (_mapGoods.ContainsKey(str))
+		    if (mapGoods.ContainsKey(str))
 		    {
-			    return _mapGoods[str].copy();
+			    return mapGoods[str].Copy();
 		    }
 		    return null;
 	    }
 
 	    /********REPORT**********/
-	    public MarketReport get_marketReport(int rounds)
+	    public MarketReport GetMarketReport(int rounds)
 	    {
 		    var mr = new MarketReport();
 		    mr.strListGood = "Commod\n\n";
@@ -284,64 +285,63 @@ namespace EconomySim
 		    mr.strListAgentProfit = "Profit\n\n";
 		    mr.strListAgentMoney = "Money\n\n";
 
-		    mr.arrStrListInventory = new List<String>();
+		    mr.arrStrListInventory = new List<string>();
 
-		    foreach (var commodity in _goodTypes)
+		    foreach (var commodity in goodTypes)
 		    {
 			    mr.strListGood += commodity + "\n";
 
-			    var price = history.prices.average(commodity, rounds);
-			    mr.strListGoodPrices += Quick.numStr(price, 2) + "\n";
+			    var price = History.Prices.Average(commodity, rounds);
+			    mr.strListGoodPrices += Quick.NumToStr(price, 2) + "\n";
 
-			    var asks = history.asks.average(commodity, rounds);
+			    var asks = History.Asks.Average(commodity, rounds);
 			    mr.strListGoodAsks += (int)(asks) + "\n";
 
-			    var bids = history.bids.average(commodity, rounds);
+			    var bids = History.Bids.Average(commodity, rounds);
 			    mr.strListGoodBids += (int)(bids) + "\n";
 
-			    var trades = history.trades.average(commodity, rounds);
+			    var trades = History.Trades.Average(commodity, rounds);
 			    mr.strListGoodTrades += (int)(trades) + "\n";
 
 			    mr.arrStrListInventory.Add(commodity + "\n\n");
 		    }
-		    foreach (var key in _mapAgents.Keys)
+		    foreach (var key in mapAgents.Keys)
 		    {
 			    var inventory = new List<double>();
-			    foreach (var str in _goodTypes)
+			    foreach (var str in goodTypes)
 			    {
 				    inventory.Add(0);
 			    }
 			    mr.strListAgent += key + "\n";
-			    var profit = history.profit.average(key, rounds);
-			    mr.strListAgentProfit += Quick.numStr(profit, 2) + "\n";
+			    var profit = History.Profit.Average(key, rounds);
+			    mr.strListAgentProfit += Quick.NumToStr(profit, 2) + "\n";
 
-			    double test_profit = 0;
-			    var list = _agents; //var list = _agents.filter(function(a:BasicAgent):Bool { return a.className == key; } );  dfs stub wtf
+			    var list = agents; //var list = _agents.filter(function(a:BasicAgent):Bool { return a.className == key; } );  dfs stub wtf
 			    int count = 0;
 			    double money = 0;
 
 			    foreach (var a in list)
 			    {
-                    if (a.className==key)
+                    if (a.ClassName==key)
                     {
                         count++;
-				        money += a.money;
-				        for (int lic=0; lic<_goodTypes.Count; lic++)
+				        money += a.Money;
+				        for (int lic=0; lic<goodTypes.Count; lic++)
 				        {
-					        inventory[lic] += a.queryInventory(_goodTypes[lic]);
+					        inventory[lic] += a.QueryInventory(goodTypes[lic]);
 				        }
                     }
 			    }
 
 			    money /= count;
-			    for (int lic =0; lic<_goodTypes.Count; lic++)
+			    for (int lic =0; lic<goodTypes.Count; lic++)
 			    {
 				    inventory[lic] /= count;
-				    mr.arrStrListInventory[lic] += Quick.numStr(inventory[lic],1) + "\n";
+				    mr.arrStrListInventory[lic] += Quick.NumToStr(inventory[lic],1) + "\n";
 			    }
 
-			    mr.strListAgentCount += Quick.numStr(count, 0) + "\n";
-			    mr.strListAgentMoney += Quick.numStr(money, 0) + "\n";
+			    mr.strListAgentCount += Quick.NumToStr(count, 0) + "\n";
+			    mr.strListAgentMoney += Quick.NumToStr(money, 0) + "\n";
 		    }
 		    return mr;
 	    }
@@ -353,54 +353,55 @@ namespace EconomySim
 		    //Create commodity index
 		    foreach (var g in data.goods)
 		    {
-			    _goodTypes.Add(g.id);
-			    _mapGoods[g.id] = new Good(g.id, g.size);
+			    goodTypes.Add(g.Id);
+			    mapGoods[g.Id] = new Good(g.Id, g.Size);
 
                 double v = 1.0;
-                if (g.id == "metal") v = 2.0;
-                if (g.id == "tools") v = 3.0;
+                if (g.Id == "metal") v = 2.0;
+                if (g.Id == "tools") v = 3.0;
 
-			    history.register(g.id);
-                history.prices.add(g.id, v);	//start the bidding at $1!
-                history.asks.add(g.id, v);	//start history charts with 1 fake buy/sell bid
-                history.bids.add(g.id, v);
-                history.trades.add(g.id, v);
+			    History.Register(g.Id);
+                History.Prices.Add(g.Id, v);	//start the bidding at $1!
+                History.Asks.Add(g.Id, v);	//start history charts with 1 fake buy/sell bid
+                History.Bids.Add(g.Id, v);
+                History.Trades.Add(g.Id, v);
 
-			    _book.register(g.id);
+			    book.Register(g.Id);
 		    }
 
-		    _mapAgents = new Dictionary<String, AgentData>();
+		    mapAgents = new Dictionary<string, AgentData>();
 
 		    foreach (var aData in data.agentTypes)
 		    {
-			    _mapAgents[aData.className] = aData;
-			    history.profit.register(aData.className);
+			    mapAgents[aData.ClassName] = aData;
+			    History.Profit.Register(aData.ClassName);
 		    }
 
 		    //Make the agent list
-		    _agents = new BindingList<BasicAgent>();
+		    agents = new BindingList<BasicAgent>();
 
 		    var agentIndex = 0;
 		    foreach (var agent in data.agents)
 		    {
-			    agent.id = agentIndex;
-			    agent.init(this);
-			    _agents.Add(agent);
+			    agent.Id = agentIndex;
+			    agent.Init(this);
+			    agents.Add(agent);
 			    agentIndex++;
 		    }
 
 	    }
 
-	    private void resolveOffers(String good= "")
+        //TODO: do we need the default ""?
+	    private void resolveOffers(string good= "")
 	    {
-		    var bids = _book.bids[good];
-		    var asks = _book.asks[good];
+		    var bids = book.bids[good];
+		    var asks = book.asks[good];
 
-		    bids = Quick.shuffle(bids);  
-		    asks = Quick.shuffle(asks);  
+		    bids = Quick.Shuffle(bids);  
+		    asks = Quick.Shuffle(asks);  
 
             //bids.Sort(Quick.sortOfferDecending); //highest buying price first
-            asks.Sort(Quick.sortOfferAcending); //lowest selling price first
+            asks.Sort(Quick.SortOfferAcending); //lowest selling price first
 
 		    int successfulTrades = 0;		//# of successful trades this round
 		    double moneyTraded = 0;			//amount of money traded this round
@@ -428,7 +429,7 @@ namespace EconomySim
 			    var seller = asks[0];
 
 			    var quantity_traded = (double)Math.Min(seller.units, buyer.units);
-                var clearing_price = seller.unit_price; //Quick.avgf(seller.unit_price, buyer.unit_price);
+                var clearing_price = seller.unitPrice; //Quick.avgf(seller.unit_price, buyer.unit_price);
 
                 //if (buyer.unit_price < seller.unit_price)
                 //    break;
@@ -439,14 +440,14 @@ namespace EconomySim
 				    seller.units -= quantity_traded;
 				    buyer.units -= quantity_traded;
 
-				    transferGood(good, quantity_traded, seller.agent_id, buyer.agent_id, clearing_price);
-				    transferMoney(quantity_traded * clearing_price, seller.agent_id, buyer.agent_id);
+				    transferGood(good, quantity_traded, seller.agentId, buyer.agentId, clearing_price);
+				    transferMoney(quantity_traded * clearing_price, seller.agentId, buyer.agentId);
 
 				    //update agent price beliefs based on successful transaction
-				    var buyer_a = _agents[buyer.agent_id];
-				    var seller_a = _agents[seller.agent_id];
-				    buyer_a.updatePriceModel(this, "buy", good, true, clearing_price);
-				    seller_a.updatePriceModel(this, "sell", good, true, clearing_price);
+				    var buyer_a = agents[buyer.agentId];
+				    var seller_a = agents[seller.agentId];
+				    buyer_a.UpdatePriceModel(this, "buy", good, true, clearing_price);
+				    seller_a.UpdatePriceModel(this, "sell", good, true, clearing_price);
 
 				    //log the stats
 				    moneyTraded += (quantity_traded * clearing_price);
@@ -467,7 +468,7 @@ namespace EconomySim
 
 			    failsafe++;
 
-			    if (failsafe > 1000)
+			    if (failsafe > 1000) //lol, ok
 			    {
 				    Console.WriteLine("BOINK!");
 			    }
@@ -478,83 +479,82 @@ namespace EconomySim
 		    while (bids.Count > 0)
 		    {
 			    var buyer = bids[0];
-			    var buyer_a = _agents[buyer.agent_id];
-			    buyer_a.updatePriceModel(this,"buy",good, false);
+			    var buyer_a = agents[buyer.agentId];
+			    buyer_a.UpdatePriceModel(this,"buy",good, false);
 			    bids.RemoveAt(0);//.splice(0, 1);
 		    }
             while (asks.Count > 0)
 		    {
 			    var seller = asks[0];
-			    var seller_a = _agents[seller.agent_id];
-			    seller_a.updatePriceModel(this,"sell",good, false);
+			    var seller_a = agents[seller.agentId];
+			    seller_a.UpdatePriceModel(this,"sell",good, false);
                 asks.RemoveAt(0);// splice(0, 1);
 		    }
 
 		    //update history
 
-		    history.asks.add(good, numAsks);
-		    history.bids.add(good, numBids);
-		    history.trades.add(good, unitsTraded);
+		    History.Asks.Add(good, numAsks);
+		    History.Bids.Add(good, numBids);
+		    History.Trades.Add(good, unitsTraded);
 
 		    if (unitsTraded > 0)
 		    {
 			    avgPrice = moneyTraded / (double)unitsTraded;
-			    history.prices.add(good, avgPrice);
+			    History.Prices.Add(good, avgPrice);
 		    }
 		    else
 		    {
 			    //special case: none were traded this round, use last round's average price
-			    history.prices.add(good, history.prices.average(good, 1));
-			    avgPrice = history.prices.average(good,1);
+			    History.Prices.Add(good, History.Prices.Average(good, 1));
+			    avgPrice = History.Prices.Average(good,1);
 		    }
 
-            List<BasicAgent> ag = _agents.ToList<BasicAgent>();
-		    ag.Sort(Quick.sortAgentAlpha);
+            List<BasicAgent> agentsList = agents.ToList<BasicAgent>();
+		    agentsList.Sort(Quick.SortAgentAlpha);
 
-		    String curr_class = "";
-		    String last_class = "";
+		    string currClass = "";
+		    string lastClass = "";
 		    List<double> list  = null;
-		    double avg_profit = 0;
 
-		    for (int i=0;i<ag.Count; i++)
+		    for (int i=0;i<agentsList.Count; i++)
 		    {
-			    var a = ag[i];		//get current agent
-			    curr_class = a.className;			//check its class
-			    if (curr_class != last_class)		//new class?
+			    var a = agentsList[i];		//get current agent
+			    currClass = a.ClassName;			//check its class
+			    if (currClass != lastClass)		//new class?
 			    {
 				    if (list != null)				//do we have a list built up?
 				    {
 					    //log last class' profit
-					    history.profit.add(last_class, Quick.listAvgf(list));
+					    History.Profit.Add(lastClass, Quick.AvgList(list));
 				    }
 				    list = new List<double>();		//make a new list
-				    last_class = curr_class;
+				    lastClass = currClass;
 			    }
-			    list.Add(a.get_profit());			//push profit onto list
+			    list.Add(a.GetProfit());			//push profit onto list
 		    }
 
 		    //add the last class too
-		    history.profit.add(last_class, Quick.listAvgf(list));
+		    History.Profit.Add(lastClass, Quick.AvgList(list));
 
 		    //sort by id so everything works again
 		    //_agents.Sort(Quick.sortAgentId);
 
 	    }
 
-	    private void transferGood(String good, double units, int seller_id, int buyer_id, double clearing_price)
+	    private void transferGood(string good, double units, int sellerId, int buyerId, double clearingPrice)
 	    {
-		    var seller = _agents[seller_id];
-		    var  buyer = _agents[buyer_id];
-		    seller.changeInventory(good, -units, 0);
-		     buyer.changeInventory(good,  units, clearing_price);
+		    var seller = agents[sellerId];
+		    var  buyer = agents[buyerId];
+		    seller.ChangeInventory(good, -units, 0);
+		     buyer.ChangeInventory(good,  units, clearingPrice);
 	    }
 
-	    private void transferMoney(double amount, int seller_id, int buyer_id)
+	    private void transferMoney(double amount, int sellerId, int buyerId)
 	    {
-		    var seller = _agents[seller_id];
-		    var  buyer = _agents[buyer_id];
-		    seller.money += amount;
-		     buyer.money -= amount;
+		    var seller = agents[sellerId];
+		    var  buyer = agents[buyerId];
+		    seller.Money += amount;
+		    buyer.Money -= amount;
 	    }
 
     }
