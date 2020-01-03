@@ -140,41 +140,44 @@ namespace EconomySim
                 textBox1.Text += res.strListGoodBids.Replace("\n", "\t") + Environment.NewLine;
                 textBox1.Text += res.strListGoodAsks.Replace("\n", "\t") + Environment.NewLine;
 
+                //Split the good price results
+                string[] goodPrices = res.strListGoodPrices.Split('\n');
+
                 //populate the food graph
                 FoodPriceValues.Add(new PriceModel
                 {
                     Iteration = iterationCount,
-                    Price = Double.Parse(res.strListGoodPrices.Split('\n')[2])
+                    Price = Double.Parse(goodPrices[2])
                 });
 
                 WoodPriceValues.Add(new PriceModel
                 {
                     Iteration = iterationCount,
-                    Price = Double.Parse(res.strListGoodPrices.Split('\n')[3])
+                    Price = Double.Parse(goodPrices[3])
                 });
 
                 OrePriceValues.Add(new PriceModel
                 {
                     Iteration = iterationCount,
-                    Price = Double.Parse(res.strListGoodPrices.Split('\n')[4])
+                    Price = Double.Parse(goodPrices[4])
                 });
 
                 MetalPriceValues.Add(new PriceModel
                 {
                     Iteration = iterationCount,
-                    Price = Double.Parse(res.strListGoodPrices.Split('\n')[5])
+                    Price = Double.Parse(goodPrices[5])
                 });
 
                 ToolsPriceValues.Add(new PriceModel
                 {
                     Iteration = iterationCount,
-                    Price = Double.Parse(res.strListGoodPrices.Split('\n')[6])
+                    Price = Double.Parse(goodPrices[6])
                 });
 
                 WorkPriceValues.Add(new PriceModel
                 {
                     Iteration = iterationCount,
-                    Price = Double.Parse(res.strListGoodPrices.Split('\n')[7])
+                    Price = Double.Parse(goodPrices[7])
                 });
             }
 
