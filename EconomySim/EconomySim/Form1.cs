@@ -30,6 +30,16 @@ namespace EconomySim
             SetupTimer();            
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            economy = new DoranAndParberryEconomy();
+
+            market = economy.GetMarket("default");
+
+            dataGridView1.DataSource = market.agents;
+            //dataGridView2.DataSource = market._book.dbook;
+        }
+
         private void SetupChart()
         {
             FoodPriceValues = new ChartValues<PriceModel>();
@@ -79,17 +89,6 @@ namespace EconomySim
         {
             if (market != null && autoRunCbx.Checked)
                 run(100);
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            economy = new DoranAndParberryEconomy();
-
-            market = economy.GetMarket("default");
-
-            dataGridView1.DataSource = market.agents;
-            //dataGridView2.DataSource = market._book.dbook;
-
         }
 
         private void run(int rounds)
