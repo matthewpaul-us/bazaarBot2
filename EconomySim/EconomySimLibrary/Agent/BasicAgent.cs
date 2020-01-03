@@ -29,7 +29,6 @@ namespace EconomySim
 	    private Logic logic;
 	    protected Inventory Inventory;
 	    protected Dictionary<string,List<double>> ObservedTradingRange;
-	    private double profit = 0;	//profit from last round
 	    private int lookback = 15;
 
 

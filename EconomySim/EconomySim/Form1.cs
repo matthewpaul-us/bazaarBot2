@@ -94,27 +94,28 @@ namespace EconomySim
 
         private void run(int rounds)
         {
-            iterationCount += rounds; 
-
-            market.Simulate(rounds);
-            var res = market.GetMarketReport(rounds);
-            dataGridView1.Refresh();
-            //dataGridView2.DataSource = res.arrStrListInventory;
-            textBox1.Clear();
-            textBox1.Text = res.strListGood.Replace("\n", "\t") + Environment.NewLine;
-            textBox1.Text += res.strListGoodPrices.Replace("\n", "\t") + Environment.NewLine;
-            textBox1.Text += res.strListGoodTrades.Replace("\n", "\t") + Environment.NewLine;
-            textBox1.Text += res.strListGoodBids.Replace("\n", "\t") + Environment.NewLine;
-            textBox1.Text += res.strListGoodAsks.Replace("\n", "\t") + Environment.NewLine;
-            //textBox1.Lines = res.arrStrListInventory.ToArray<string>();
-            //dataGridView1.DataSource = market._agents;
-
-            //TODO: parse out the results and add to graph
-            FoodPriceValues.Add(new PriceModel
+            for (int round = 1; round <= rounds; round++)
             {
-                Iteration = iterationCount,
-                Price = Double.Parse(res.strListGoodPrices.Split('\n')[2])
-            });
+                iterationCount++;
+                market.Simulate(1);
+                var res = market.GetMarketReport(1);
+                textBox1.Clear();
+                textBox1.Text = res.strListGood.Replace("\n", "\t") + Environment.NewLine;
+                textBox1.Text += res.strListGoodPrices.Replace("\n", "\t") + Environment.NewLine;
+                textBox1.Text += res.strListGoodTrades.Replace("\n", "\t") + Environment.NewLine;
+                textBox1.Text += res.strListGoodBids.Replace("\n", "\t") + Environment.NewLine;
+                textBox1.Text += res.strListGoodAsks.Replace("\n", "\t") + Environment.NewLine;
+
+                //populate the food graph
+                FoodPriceValues.Add(new PriceModel
+                {
+                    Iteration = iterationCount,
+                    Price = Double.Parse(res.strListGoodPrices.Split('\n')[2])
+                });
+            }
+
+            //data grid only shows latest, so only update after all runs
+            dataGridView1.Refresh();
         }
 
         private void button2_Click(object sender, EventArgs e)
