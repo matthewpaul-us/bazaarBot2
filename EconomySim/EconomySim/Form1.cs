@@ -21,6 +21,11 @@ namespace EconomySim
         private int iterationCount = 0;
 
         public ChartValues<PriceModel> FoodPriceValues { get; set; }
+        public ChartValues<PriceModel> WoodPriceValues { get; set; }
+        public ChartValues<PriceModel> OrePriceValues { get; set; }
+        public ChartValues<PriceModel> MetalPriceValues { get; set; }
+        public ChartValues<PriceModel> ToolsPriceValues { get; set; }
+        public ChartValues<PriceModel> WorkPriceValues { get; set; }
 
         public Form1()
         {
@@ -43,6 +48,11 @@ namespace EconomySim
         private void SetupChart()
         {
             FoodPriceValues = new ChartValues<PriceModel>();
+            WoodPriceValues = new ChartValues<PriceModel>();
+            OrePriceValues  = new ChartValues<PriceModel>();
+            MetalPriceValues = new ChartValues<PriceModel>();
+            ToolsPriceValues = new ChartValues<PriceModel>();
+            WorkPriceValues = new ChartValues<PriceModel>();
 
             var mapper = Mappers.Xy<PriceModel>()
                 .X(model => model.Iteration)        //use accumulated iteration count X
@@ -57,7 +67,32 @@ namespace EconomySim
                 {
                     Title = "Food Price",
                     Values = FoodPriceValues
-                }
+                },
+                new LineSeries
+                {
+                    Title = "Wood Price",
+                    Values = WoodPriceValues
+                },
+                new LineSeries
+                {
+                    Title = "Ore Price",
+                    Values = OrePriceValues
+                },
+                new LineSeries
+                {
+                    Title = "Metal Price",
+                    Values = MetalPriceValues
+                },
+                new LineSeries
+                {
+                    Title = "Tools Price",
+                    Values = ToolsPriceValues
+                },
+                new LineSeries
+                {
+                    Title = "Work Price",
+                    Values = WorkPriceValues
+                },
             };
 
             //lineChart.AxisX.Add(new Axis
@@ -110,6 +145,36 @@ namespace EconomySim
                 {
                     Iteration = iterationCount,
                     Price = Double.Parse(res.strListGoodPrices.Split('\n')[2])
+                });
+
+                WoodPriceValues.Add(new PriceModel
+                {
+                    Iteration = iterationCount,
+                    Price = Double.Parse(res.strListGoodPrices.Split('\n')[3])
+                });
+
+                OrePriceValues.Add(new PriceModel
+                {
+                    Iteration = iterationCount,
+                    Price = Double.Parse(res.strListGoodPrices.Split('\n')[4])
+                });
+
+                MetalPriceValues.Add(new PriceModel
+                {
+                    Iteration = iterationCount,
+                    Price = Double.Parse(res.strListGoodPrices.Split('\n')[5])
+                });
+
+                ToolsPriceValues.Add(new PriceModel
+                {
+                    Iteration = iterationCount,
+                    Price = Double.Parse(res.strListGoodPrices.Split('\n')[6])
+                });
+
+                WorkPriceValues.Add(new PriceModel
+                {
+                    Iteration = iterationCount,
+                    Price = Double.Parse(res.strListGoodPrices.Split('\n')[7])
                 });
             }
 
