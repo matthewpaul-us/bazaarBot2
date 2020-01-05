@@ -123,7 +123,7 @@ namespace EconomySim
         private void AutoStepTimer_Tick(object sender, EventArgs e)
         {
             if (market != null && autoRunCbx.Checked)
-                run(100);
+                run(1);
         }
 
         private void run(int rounds)
