@@ -80,7 +80,7 @@ namespace EconomySim
                 j ← random integer with 0 ≤ j ≤ i
                 exchange a[j] and a[i]
              */
-            for (int i=0; i<list.Count - 1; i++)
+            for (int i = list.Count - 1; i >= 0; i--)
             {
                 int ii = (list.Count - 1) - i;
                 if (ii > 1)

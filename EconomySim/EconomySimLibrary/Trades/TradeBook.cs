@@ -11,16 +11,16 @@ namespace EconomySim
 	    public Dictionary<string, List<Offer>> bids;
 	    public Dictionary<string, List<Offer>> asks;
 
-        public DataTable dbook { get; set; }
+        //public DataTable dbook { get; set; }
 
 	    public TradeBook()
 	    {
 		    bids = new Dictionary<string, List<Offer>>();
 		    asks = new Dictionary<string, List<Offer>>();
-            dbook = new DataTable("Book");
-            dbook.Columns.Add(new DataColumn("bid"));
-            dbook.Columns.Add(new DataColumn("ask"));
-            dbook.Rows.Add(1.0,2.0);
+            //dbook = new DataTable("Book");
+            //dbook.Columns.Add(new DataColumn("bid"));
+            //dbook.Columns.Add(new DataColumn("ask"));
+            //dbook.Rows.Add(1.0,2.0);
         }
 
 	    public void Register(string name)
