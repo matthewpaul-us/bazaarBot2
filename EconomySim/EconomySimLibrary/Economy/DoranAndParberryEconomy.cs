@@ -208,7 +208,7 @@ namespace EconomySim
         private BasicAgent getAgent(AgentData data)
         {
             data.Logic = getLogic(data.logicName);
-            return new Agent(0, data);
+            return new DoranParberryAgent(0, data);
         }
 
         private Logic getLogic(string str)

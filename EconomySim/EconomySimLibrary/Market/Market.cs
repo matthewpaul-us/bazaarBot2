@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EconomySimLibrary.Bankrupt;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -6,11 +7,6 @@ using System.Text;
 
 namespace EconomySim
 {
-    public interface ISignalBankrupt
-    {
-        void SignalBankrupt(Market m, BasicAgent agent);
-    }
-
     public class Market
     {
 	    public string Name;

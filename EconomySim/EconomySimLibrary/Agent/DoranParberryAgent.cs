@@ -9,11 +9,11 @@ namespace EconomySim
      * An agent that performs the basic logic from the Doran & Parberry article
      * @author
      */
-    public class Agent : BasicAgent
+    public class DoranParberryAgent : BasicAgent
     {
 	    public const double MIN_PRICE = 0.01;		//lowest possible price
 
-	    public Agent(int id, AgentData data) : base(id,data)
+	    public DoranParberryAgent(int id, AgentData data) : base(id,data)
 	    {
 
 	    }

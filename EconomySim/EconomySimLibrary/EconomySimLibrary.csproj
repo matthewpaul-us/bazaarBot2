@@ -44,9 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Agent\Agent.cs" />
+    <Compile Include="Agent\DoranParberryAgent.cs" />
     <Compile Include="Agent\AgentData.cs" />
     <Compile Include="Agent\BasicAgent.cs" />
+    <Compile Include="Bankrupt\ISignalBankrupt.cs" />
     <Compile Include="Economy\Economy.cs" />
     <Compile Include="Economy\DoranAndParberryEconomy.cs" />
     <Compile Include="Goods\Good.cs" />

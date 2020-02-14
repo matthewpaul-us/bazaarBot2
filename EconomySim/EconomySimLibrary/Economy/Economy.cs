@@ -1,10 +1,14 @@
-﻿using System;
+﻿using EconomySimLibrary.Bankrupt;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace EconomySim
 {
+	/// <summary>
+	/// Top level object.  Itended to be extended for the specific economy a game implements.
+	/// </summary>
     public class Economy : ISignalBankrupt
     {
 	    private List<Market> markets;
