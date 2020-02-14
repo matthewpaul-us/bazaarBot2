@@ -10,15 +10,20 @@ namespace EconomySim
 {
     public class DoranAndParberryEconomy : Economy
     {
+        /// <summary>
+        /// Sets up a default economy and initializes.
+        /// </summary>
 	    public DoranAndParberryEconomy()
 	    {
 		    var market = new Market("default",this);
 
-            MarketData data = getMarketData();
+            MarketData data = getMarketData(); //Gets default market data below
             market.Init(data); // market.init(MarketData.fromJSON(Json.parse(Assets.getText("assets/settings.json")), getAgent));
 		    AddMarket(market);
 	    }
 
+        //Gets default market data
+        //Should we pull from DB or cache and call each iteration to accomodate outages?
         private MarketData getMarketData()
         {
             List<Good> goods = new List<Good>();
@@ -92,29 +97,24 @@ namespace EconomySim
             MarketData data = new MarketData(goods, agentTypes, agents);
 
             return data;
-
-            //var assembly = Assembly.GetExecutingAssembly();
-            //var resourceName = "EconomySim.settings.txt";
-
-            //string[] names = assembly.GetManifestResourceNames();
-
-
-            //using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            //using (StreamReader reader = new StreamReader(stream))
-            //{
-            //    string result = reader.ReadToEnd();
-            //    MarketData data = JsonConvert.DeserializeObject<MarketData>(result);
-            //    return data;
-            //}
-            //return null;
         }
 
-
+        /// <summary>
+        /// An agent ran out of money and now will be replaced!
+        /// </summary>
+        /// <param name="market"></param>
+        /// <param name="agent"></param>
 	    public override void SignalBankrupt(Market market, BasicAgent agent)
 	    {
 		    replaceAgent(market, agent);
 	    }
 
+        /// <summary>
+        /// Figures out which which agent is currently most profitable.  
+        /// This is currently used for bankrupt agents.
+        /// </summary>
+        /// <param name="market"></param>
+        /// <param name="agent"></param>
 	    private void replaceAgent(Market market, BasicAgent agent)
 	    {
 		    var bestClass = market.GetMostProfitableAgentClass();
@@ -139,26 +139,6 @@ namespace EconomySim
 
 
 	    /**
-	     * Get the average amount of a given good that a given agent class has
-	     * @param	className
-	     * @param	good
-	     * @return
-	     */
-	    /*
-	    public function getAgentClassAverageInventory(className:String, good:String):Float
-	    {
-		    var list = _agents.filter(function(a:BasicAgent):Bool { return a.className == className; } );
-		    var amount:Float = 0;
-		    for (agent in list)
-		    {
-			    amount += agent.queryInventory(good);
-		    }
-		    amount /= list.length;
-		    return amount;
-	    }
-	    */
-
-	    /**
 	     * Find the agent class that produces the most of a given good
 	     * @param	good
 	     * @return
@@ -175,42 +155,22 @@ namespace EconomySim
             return res;
 	    }
 
-	    /**
-	     * Find the agent class that has the most of a given good
-	     * @param	good
-	     * @return
-	     */
-	    /*
-	    public function getAgentClassWithMost(good:String):String
-	    {
-		    var amount:Float = 0;
-		    var bestAmount:Float = 0;
-		    var bestClass:String = "";
-		    for (key in _mapAgents.keys())
-		    {
-			    amount = getAverageInventory(key, good);
-			    if (amount > bestAmount)
-			    {
-				    bestAmount = amount;
-				    bestClass = key;
-			    }
-		    }
-		    return bestClass;
-	    }
-	    */
-
-        //private BasicAgent getAgentScript(AgentData data)
-        //{
-        //    data.logic = new LogicScript(data.logicName+".hs");
-        //    return new Agent(0, data);
-        //}
-
+        /// <summary>
+        /// Get an agent from AgentData by matching the logic name to the logic associated with the agent.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         private BasicAgent getAgent(AgentData data)
         {
             data.Logic = getLogic(data.logicName);
             return new DoranParberryAgent(0, data);
         }
 
+        /// <summary>
+        /// Get a Logic entity from the string that describes it.
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         private Logic getLogic(string str)
         {
             switch (str)

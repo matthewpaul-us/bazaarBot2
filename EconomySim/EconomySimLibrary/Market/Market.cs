@@ -28,7 +28,12 @@ namespace EconomySim
 	    private Dictionary<string, AgentData> mapAgents;
 	    private Dictionary<string, Good> mapGoods;
         
-        
+        /// <summary>
+		/// Not crazy about injecting the interface. 
+		/// This could be an event handler but not sure which is more performant or if that matters in this case.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="isb"></param>
         public Market(string name, ISignalBankrupt isb)
 	    {
 		    this.Name = name;
@@ -48,16 +53,6 @@ namespace EconomySim
 		    fromData(data);
 	    }
 
-	    public int NumTypesOfGood()
-	    {
-		    return goodTypes.Count;
-	    }
-
-	    public int NumAgents()
-	    {
-		    return agents.Count;
-	    }
-
 	    public void ReplaceAgent(BasicAgent oldAgent, BasicAgent newAgent)
 	    {
 		    newAgent.Id = oldAgent.Id;
@@ -66,7 +61,7 @@ namespace EconomySim
 		    newAgent.Init(this);
 	    }
 
-	    //@:access(bazaarbot.agent.BasicAgent)    //dfs stub ????
+	    
 	    public void Simulate(int rounds)
 	    {
 		    for (int round=0; round<rounds; round++)
@@ -159,58 +154,6 @@ namespace EconomySim
 	    }
 
 	    /**
-	     * Returns the good that has the lowest average price over the given range of time
-	     * @param	range how many rounds to look back
-	     * @param	exclude goods to exclude
-	     * @return
-	     */
-
-	    public string GetCheapestGood(int range, List<string> exclude = null)
-	    {
-            double bestPrice = -9999999;// Math.POSITIVE_INFINITY;
-		    string bestGood = "";
-		    foreach (var g in goodTypes)
-		    {
-			    if (exclude == null || !exclude.Contains(g))
-			    {
-				    double price = History.Prices.Average(g, range);
-				    if (price < bestPrice)
-				    {
-					    bestPrice = price;
-					    bestGood = g;
-				    }
-			    }
-		    }
-		    return bestGood;
-	    }
-
-	    /**
-	     * Returns the good that has the highest average price over the given range of time
-	     * @param	range how many rounds to look back
-	     * @param	exclude goods to exclude
-	     * @return
-	     */
-
-	    public string GetDearestGood(int range, List<string> exclude= null)
-	    {
-		    double bestPrice = 0;
-		    string bestGood = "";
-		    foreach (var g in goodTypes)
-		    {
-			    if (exclude == null || !exclude.Contains(g))
-			    {
-				    var price = History.Prices.Average(g, range);
-				    if (price > bestPrice)
-				    {
-					    bestPrice = price;
-					    bestGood = g;
-				    }
-			    }
-		    }
-		    return bestGood;
-	    }
-
-	    /**
 	     *
 	     * @param	range
 	     * @return
@@ -236,34 +179,10 @@ namespace EconomySim
 		    return mapAgents[className];
 	    }
 
-	    public List<string> GetAgentClassNames()
-	    {
-		    var agentData = new List<string> ();
-		    foreach (var key in mapAgents.Keys)
-		    {
-			    agentData.Add(key);
-		    }
-		    return agentData;
-	    }
-
-	    public List<string> GetGoods()
-	    {
-            return new List<string>(goodTypes);
-	    }
-
         // TODO: why is this unsafe????
 	    public List<string> GetGoodsUnsafe()
 	    {
 		    return goodTypes;
-	    }
-
-	    public Good GetGoodEntry(string str)
-	    {
-		    if (mapGoods.ContainsKey(str))
-		    {
-			    return mapGoods[str].Copy();
-		    }
-		    return null;
 	    }
 
 	    /********REPORT**********/

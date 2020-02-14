@@ -13,6 +13,7 @@ namespace EconomySim
     {
 	    private List<Market> markets;
 
+		//Automatically called when the inherited class is instantiated
         public Economy()
 	    {
 		    markets = new List<Market>();

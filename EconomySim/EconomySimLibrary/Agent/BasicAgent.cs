@@ -7,10 +7,10 @@ namespace EconomySim
 {
     public class BasicAgent
     {
+
 	    public int Id;				//unique integer identifier
         public string ClassName { get; set; }	//string identifier, "famer", "woodcutter", etc.
         public double Money { get; set; }
-        public double Space { get { return Inventory.GetEmptySpace(); } }
         public double NProduct { get; set; }
 
         //public var moneyLastRound(default, null):double;
@@ -164,39 +164,7 @@ namespace EconomySim
             return Inventory.GetEmptySpace() == 0;
         }
 
-
-
-        /********PRIVATE************/
-
-        private double getInventorySpace()
-	    {
-		    return Inventory.GetEmptySpace();
-	    }
-
         /********PROTECTED************/
-
-        protected double DetermineSaleQuantity(Market bazaar, string commodity)
-	    {
-		    var mean = bazaar.GetAverageHistoricalPrice(commodity,lookback); //double
-		    var tradingRange = observeTradingRange(commodity,10);//point
-
-		    if (tradingRange != null && mean > 0)
-		    {
-			    var favorability= Quick.PositionInRange(mean, tradingRange.x, tradingRange.y);//double
-			    //position_in_range: high means price is at a high point
-
-			    double amountToSell = Math.Round(favorability * Inventory.Surplus(commodity)); //double
-                amountToSell = Inventory.Query(commodity);
-
-			    if (amountToSell < 1)
-			    {
-				    amountToSell = 1;
-			    }
-			    return amountToSell;
-		    }
-
-		    return 0;
-	    }
 
         protected double DeterminePurchaseQuantity(Market bazaar, string commodity)
 	    {

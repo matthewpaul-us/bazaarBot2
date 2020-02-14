@@ -16,10 +16,5 @@ namespace EconomySim
 		    Id = id;
 		    Size = size;
 	    }
-
-	    public Good Copy()
-	    {
-		    return new Good(Id, Size);
-	    }
     }
 }

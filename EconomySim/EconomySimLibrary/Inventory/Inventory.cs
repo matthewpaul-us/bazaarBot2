@@ -53,38 +53,6 @@ namespace EconomySim
 		    maxSize = data.MaxSize;
 	    }
 
-	    public Inventory Copy()
-	    {
-		    var i = new Inventory();
-            //TODO: improve these names
-		    var stufff = new List<Point>();
-		    var stuffi = new List<String>();
-		    var idealf = new List<double>();
-		    var ideali = new List<String>();
-		    var sizesf = new List<double>();
-		    var sizesi = new List<String>();
-		    foreach (string key in stuff.Keys)
-		    {
-			    stufff.Add(stuff[key]);
-			    stuffi.Add(key);
-		    }
-		    foreach (string key in ideal.Keys)
-		    {
-			    idealf.Add(ideal[key]);
-			    ideali.Add(key);
-		    }
-		    foreach (string key in sizes.Keys)
-		    {
-			    sizesf.Add(sizes[key]);
-			    sizesi.Add(key);
-		    }
-		    i.SetStuff(stuffi, stufff);
-		    i.SetIdeal(ideali, idealf);
-		    i.SetSizes(sizesi, sizesf);
-		    i.maxSize = maxSize;
-		    return i;
-	    }
-
 	    public void Destroy()
 	    {
             stuff.Clear();
@@ -153,15 +121,6 @@ namespace EconomySim
             }
             return 0;
         }
-
-	    public double Ideal(String good)
-	    {
-		    if (ideal.ContainsKey(good))
-		    {
-			    return ideal[good];
-		    }
-		    return 0;
-	    }
 
 	    public double GetEmptySpace()
 	    {

@@ -10,11 +10,6 @@ namespace EconomySim
         //TODO: improve this design
         public static Random rnd = new Random();
 
-        public static double Avg(double a, double b)
-        {
-            return (a + b) / 2;
-        }
-
         public static double AvgList(List<double> list)
         {
             double avg=0;
@@ -62,41 +57,6 @@ namespace EconomySim
             string s = string.Format("{0:N"+decimals.ToString()+"}", num);
             return s;
         }
-    //        num = Math.floor(num * tens) / tens;
-    //        var str:string = Std.string(num);
-    //        var split = str.split(".");
-    //        if (split.length == 2)
-    //        {
-    //            if (split[1].length < decimals)
-    //            {
-    //                var diff:Int = decimals - split[1].length;
-    //                for (i in 0...diff)
-    //                {
-    //                    str += "0";
-    //                }
-    //            }
-    //            if (decimals > 0)
-    //            {
-    //                str = split[0] + "." + split[1].substr(0, decimals);
-    //            }
-    //            else
-    //            {
-    //                str = split[0];
-    //            }
-    //        }
-    //        else
-    //        {
-    //            if (decimals > 0)
-    //            {
-    //                str += ".";
-    //                for (i in 0...decimals)
-    //                {
-    //                    str += "0";
-    //                }
-    //            }
-    //        }
-    //        return str;
-    //    }
 
         public static double PositionInRange(double value, double min, double max, bool clamp = true)
         {
@@ -111,19 +71,6 @@ namespace EconomySim
             return value;
         }
 
-    //    public static inline function randomInteger(min:Int, max:Int):Int
-    //    {
-    //        return Std.int(Math.random() * cast(1 + max - min, Float)) + min;
-    //    }
-
-        public static double RandomRange(double a, double b)
-        {
-            double r = rnd.NextDouble();
-            double min = a < b ? a : b;
-            double max = a < b ? b : a;
-            double range = max - min;
-            return r * range + min;
-        }
 
         public static List<Offer> Shuffle(List<Offer>list)
         {
@@ -153,41 +100,11 @@ namespace EconomySim
             return string.Compare(a.ClassName,b.ClassName);
         }
 
-        public static int SortAgentId(BasicAgent a, BasicAgent b)
-        {
-            if (a.Id < b.Id) return -1;
-            if (a.Id > b.Id) return 1;
-            return 0;
-        }
-
         public static int SortOfferAcending(Offer a, Offer b)
         {
             if (a.unitPrice < b.unitPrice) return -1;
             if (a.unitPrice > b.unitPrice) return 1;
             return 0;
         }
-        public static int SortOfferDecending(Offer a, Offer b)
-        {
-            if (a.unitPrice > b.unitPrice) return -1;
-            if (a.unitPrice < b.unitPrice) return 1;
-            return 0;
-        }
-
-
-    //    public static function sortDecreasingPrice(a:Offer, b:Offer):Int
-    //    {
-    //        //Decreasing means: highest first
-    //        if (a.unit_price < b.unit_price) return 1;
-    //        if (a.unit_price > b.unit_price) return -1;
-    //        return 0;
-    //    }
-
-    //    public static function sortIncreasingPrice(a:Offer, b:Offer):Int
-    //    {
-    //        //Increasing means: lowest first
-    //        if (a.unit_price > b.unit_price) return 1;
-    //        if (a.unit_price < b.unit_price) return -1;
-    //        return 0;
-    //    }
     }
 }

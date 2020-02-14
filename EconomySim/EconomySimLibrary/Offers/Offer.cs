@@ -19,10 +19,5 @@ namespace EconomySim
 		    this.units = units;
 		    this.unitPrice = unitPrice;
 	    }
-
-	    public override string ToString()
-	    {
-		    return "("+agentId + "): " + commodity + "x " + units + " @ " + unitPrice;
-	    }
     }
 }

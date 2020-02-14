@@ -28,33 +28,5 @@ namespace EconomySim
                 }
             }
 	    }
-
-	    public InventoryData(string data)
-	    {
-            //var maxSize:Int = data.max_size;
-            //var ideal = new Map<String, Float>();
-            //var start = new Map<String, Float>();
-            //var size  = new Map<String, Float>();
-
-            //var startArray = Reflect.fields(data.start);
-            //if (startArray != null)
-            //{
-            //    for (s in startArray)
-            //    {
-            //        start.set(s, cast Reflect.field(data.start, s));
-            //        size.set(s, 1);	//initialize size of every item to 1 by default
-            //    }
-            //}
-            //var idealArray = Reflect.fields(data.ideal);
-            //if (idealArray != null)
-            //{
-            //    for (i in idealArray)
-            //    {
-            //        ideal.set(i, cast Reflect.field(data.ideal, i));
-            //    }
-            //}
-
-            //return new InventoryData(maxSize, ideal, start, size);
-	    }
     }
 }
