@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EconomySimTests", "EconomyS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EconomySimDataAccess", "EconomySimDataAccess\EconomySimDataAccess.csproj", "{AF8067D6-6D3E-4014-8E42-4D0588F279EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EconomySimConsoleBenchmarks", "EconomySimConsoleBenchmarks\EconomySimConsoleBenchmarks.csproj", "{9B94BFFF-7E5B-467F-B8E3-581C9E54EC7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,14 @@ Global
 		{AF8067D6-6D3E-4014-8E42-4D0588F279EB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF8067D6-6D3E-4014-8E42-4D0588F279EB}.Release|x86.ActiveCfg = Release|Any CPU
 		{AF8067D6-6D3E-4014-8E42-4D0588F279EB}.Release|x86.Build.0 = Release|Any CPU
+		{9B94BFFF-7E5B-467F-B8E3-581C9E54EC7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B94BFFF-7E5B-467F-B8E3-581C9E54EC7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B94BFFF-7E5B-467F-B8E3-581C9E54EC7F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9B94BFFF-7E5B-467F-B8E3-581C9E54EC7F}.Debug|x86.Build.0 = Debug|Any CPU
+		{9B94BFFF-7E5B-467F-B8E3-581C9E54EC7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B94BFFF-7E5B-467F-B8E3-581C9E54EC7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B94BFFF-7E5B-467F-B8E3-581C9E54EC7F}.Release|x86.ActiveCfg = Release|Any CPU
+		{9B94BFFF-7E5B-467F-B8E3-581C9E54EC7F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
