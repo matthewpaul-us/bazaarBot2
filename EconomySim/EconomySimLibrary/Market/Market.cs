@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace EconomySim
 {
@@ -23,7 +24,7 @@ namespace EconomySim
 	    private int roundNum = 0;
 
 	    private List<string> goodTypes;		//list of string ids for all the legal commodities
-	    public BindingList<BasicAgent> agents;
+	    public BindingList<BasicAgent> agents;	//TODO: Do we need a binding list?  We can eliminate the copy if not...
 	    public TradeBook book;
 	    private Dictionary<string, AgentData> mapAgents;
 	    private Dictionary<string, Good> mapGoods;
@@ -64,33 +65,40 @@ namespace EconomySim
 	    
 	    public void Simulate(int rounds)
 	    {
-		    for (int round=0; round<rounds; round++)
+		    for (int round=0; round < rounds; round++)
 		    {
-			    foreach (var agent in agents)
-			    {
-				    agent.MoneyLastRound = agent.Money;
-				    agent.Simulate(this);
+				foreach (var agent in agents)
+				//Parallel.ForEach(agents, (agent) =>
+				{
+					agent.MoneyLastRound = agent.Money;
+					agent.Simulate(this);
 
-				    foreach (var commodity in goodTypes)
-				    {
-					    agent.GenerateOffers(this, commodity);
-				    }
-			    }
+					foreach (var commodity in goodTypes)
+					{
+						agent.GenerateOffers(this, commodity);
+					}
+				}//);
 
-			    foreach (var commodity in goodTypes)
-			    {
-				    resolveOffers(commodity);
-			    }
+				foreach (var commodity in goodTypes)
+				//Parallel.ForEach(goodTypes, (commodity) =>
+				{
+					resolveOffers(commodity);
+				}//);
+
+				//TODO: can this be combined into loop above?
                 var del = new List<BasicAgent>();
-			    foreach (var agent in agents)
-			    {
-                    if (agent.Money <= 0) del.Add(agent);  
-			    }
+				foreach (var agent in agents)
+				//Parallel.ForEach(agents, (agent) =>
+				{
+					if (agent.Money <= 0) del.Add(agent);
+				}//);
+
                 while (del.Count > 0)
                 {
                     SignalBankrupt.SignalBankrupt(this, del[0]); //signalBankrupt.dispatch(this, agent);
                     del.RemoveAt(0);
                 }
+
                 roundNum++;
 		    }
 	    }
@@ -425,13 +433,13 @@ namespace EconomySim
 		    }
 
             List<BasicAgent> agentsList = agents.ToList<BasicAgent>();
-		    agentsList.Sort(Quick.SortAgentAlpha);
+			agentsList.Sort(Quick.SortAgentAlpha);
 
 		    string currClass = "";
 		    string lastClass = "";
 		    List<double> list  = null;
 
-		    for (int i=0;i<agentsList.Count; i++)
+		    for (int i=0;i< agentsList.Count; i++)
 		    {
 			    var a = agentsList[i];		//get current agent
 			    currClass = a.ClassName;			//check its class

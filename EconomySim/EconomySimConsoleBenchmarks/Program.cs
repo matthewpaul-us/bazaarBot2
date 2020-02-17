@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
+using EconomySim;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,23 +13,38 @@ namespace EconomySimConsoleBenchmarks
     {
         static void Main(string[] args)
         {
-            IterationTests tests = new IterationTests();
-            var summary = BenchmarkRunner.Run(typeof(Program).Assembly);
+            //EconomyTests tests = new EconomyTests();
+            //var summary = BenchmarkRunner.Run(typeof(Program).Assembly);
+
+            DoranAndParberryEconomy galacticEconomy = new DoranAndParberryEconomy(10);
+            Market galacticMarket = galacticEconomy.GetMarket("default");
+            galacticMarket.Simulate(1000);
         }
 
         [HtmlExporter]
-        public class IterationTests
+        public class EconomyTests
         {
-            [Params(10, 100, 1000, 10000, 100000, 1000000, 1000000000)]
+            [Params(10, 100)]
             public int Iterations { get; set; }
 
+            //[Benchmark]
+            //public void IterationTest()
+            //{
+            //    for (int i = 0; i < Iterations; i++)
+            //    {
+            //        int j = i;
+            //    }
+            //}
+
             [Benchmark]
-            public void IterationTest()
+            public void EconomySimBenchmark()
             {
-                for (int i = 0; i < Iterations; i++)
-                {
-                    int j = i;
-                }
+                //TODO: create "Iterations" number of agents and simulate
+                //This is to simulate each planet in game being an agent...
+
+                DoranAndParberryEconomy galacticEconomy = new DoranAndParberryEconomy(Iterations);
+                Market galacticMarket = galacticEconomy.GetMarket("default");
+                galacticMarket.Simulate(1);
             }
         }
     }

@@ -232,6 +232,10 @@
       <Project>{af8067d6-6d3e-4014-8e42-4d0588f279eb}</Project>
       <Name>EconomySimDataAccess</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EconomySimLibrary\EconomySimLibrary.csproj">
+      <Project>{152b40a5-feaf-4773-b50b-b8b94df01d4f}</Project>
+      <Name>EconomySimLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.1\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />

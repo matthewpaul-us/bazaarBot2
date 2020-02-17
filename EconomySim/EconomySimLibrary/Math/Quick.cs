@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -95,7 +96,7 @@ namespace EconomySim
         }
 
         //TODO: convert these to refs
-        public static int SortAgentAlpha(BasicAgent a, BasicAgent b)
+        public static int SortAgentAlpha(BasicAgent a, BasicAgent b) 
         {
             return string.Compare(a.ClassName,b.ClassName);
         }

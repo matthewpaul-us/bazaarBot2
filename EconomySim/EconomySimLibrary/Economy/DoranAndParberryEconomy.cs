@@ -13,18 +13,18 @@ namespace EconomySim
         /// <summary>
         /// Sets up a default economy and initializes.
         /// </summary>
-	    public DoranAndParberryEconomy()
+	    public DoranAndParberryEconomy(int numAgentsOfEachType)
 	    {
 		    var market = new Market("default",this);
 
-            MarketData data = getMarketData(); //Gets default market data below
+            MarketData data = getMarketData(numAgentsOfEachType); //Gets default market data below
             market.Init(data); // market.init(MarketData.fromJSON(Json.parse(Assets.getText("assets/settings.json")), getAgent));
 		    AddMarket(market);
 	    }
 
         //Gets default market data
         //Should we pull from DB or cache and call each iteration to accomodate outages?
-        private MarketData getMarketData()
+        private MarketData getMarketData(int numAgentsOfEachType)
         {
             List<Good> goods = new List<Good>();
 	        List<AgentData> agentTypes = new List<AgentData>();
@@ -86,7 +86,7 @@ namespace EconomySim
             int idc = 0;
             for (int iagent = 0; iagent < agentTypes.Count; iagent++)
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < numAgentsOfEachType; i++)
                 {
                     agents.Add(getAgent(agentTypes[iagent]));
                     agents[agents.Count - 1].Id = idc++;

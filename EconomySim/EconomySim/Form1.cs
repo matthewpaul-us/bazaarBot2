@@ -37,7 +37,7 @@ namespace EconomySim
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            economy = new DoranAndParberryEconomy();
+            economy = new DoranAndParberryEconomy(5);
 
             market = economy.GetMarket("default");
 
@@ -95,18 +95,17 @@ namespace EconomySim
                 },
             };
 
-            //lineChart.AxisX.Add(new Axis
-            //{
-            //    Title = "Iterations",
-            //    Labels = new[] { "Jan", "Feb", "Mar", "Apr", "May" }
-            //});
+            lineChart.AxisX.Add(new Axis
+            {
+                Title = "Iterations"
+               
+            });
 
             //lineChart.AxisY.Add(new Axis
             //{
             //    Title = "Price",
             //    LabelFormatter = value => value.ToString("C")
             //});
-            
 
             lineChart.LegendLocation = LegendLocation.Right;
         }
@@ -183,6 +182,56 @@ namespace EconomySim
 
             //data grid only shows latest, so only update after all runs
             dataGridView1.Refresh();
+
+            lineChart.AxisX[0].MinValue = iterationCount - 20; //Only show the last 20 reads
+
+            if (FoodPriceValues.Count > 20)
+            {
+                for (int i = FoodPriceValues.Count - 21; i >= 0; i--)
+                {
+                    FoodPriceValues.RemoveAt(i);
+                }
+            }
+
+            if (WoodPriceValues.Count > 20)
+            {
+                for (int i = WoodPriceValues.Count - 21; i >= 0; i--)
+                {
+                    WoodPriceValues.RemoveAt(i);
+                }
+            }
+
+            if (OrePriceValues.Count > 20)
+            {
+                for (int i = OrePriceValues.Count - 21; i >= 0; i--)
+                {
+                    OrePriceValues.RemoveAt(i);
+                }
+            }
+
+            if (MetalPriceValues.Count > 20)
+            {
+                for (int i = MetalPriceValues.Count - 21; i >= 0; i--)
+                {
+                    MetalPriceValues.RemoveAt(i);
+                }
+            }
+
+            if (ToolsPriceValues.Count > 20)
+            {
+                for (int i = ToolsPriceValues.Count - 21; i >= 0; i--)
+                {
+                    ToolsPriceValues.RemoveAt(i);
+                }
+            }
+
+            if (WorkPriceValues.Count > 20)
+            {
+                for (int i = WorkPriceValues.Count - 21; i >= 0; i--)
+                {
+                    WorkPriceValues.RemoveAt(i);
+                }
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
