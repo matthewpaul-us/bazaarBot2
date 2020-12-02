@@ -5,16 +5,17 @@ using System.Text;
 
 namespace EconomySim
 {
-    public class Logic
+	/// <summary>
+	/// Base class for the logic that agents can perform. Think of jobs and responsibilities.
+	/// </summary>
+    public abstract class Logic
     {
-	    /**
-	     * Perform this logic on the given agent
-	     * @param	agent
-	     */
-	    public virtual void Perform(BasicAgent agent, Market market)
-	    {
-		    //no implemenation -- provide your own in a subclass
-	    }
+		/// <summary>
+		/// Perform this logic on the given agent. This logic runs once per tick.
+		/// </summary>
+		/// <param name="agent">The agent to perform this logic on.</param>
+		/// <param name="market">The market associated with this agent.</param>
+		public abstract void Perform(BasicAgent agent, Market market);
 
         protected void Produce(BasicAgent agent, String commodity, double amount, double chance = 1.0)
 	    {
