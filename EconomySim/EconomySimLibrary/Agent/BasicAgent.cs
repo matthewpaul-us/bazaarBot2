@@ -11,7 +11,7 @@ namespace EconomySim
 		/// <summary>
 		/// Unique ID for the Agent
 		/// </summary>
-	    public int Id;				//unique integer identifier
+	    public int Id { get; set; }				//unique integer identifier
 		/// <summary>
 		/// The type of Agent this is
 		/// </summary>
