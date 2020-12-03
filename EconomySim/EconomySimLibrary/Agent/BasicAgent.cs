@@ -179,7 +179,7 @@ namespace EconomySim
 
 		    if (tradingRange != null)
 		    {
-			    var favorability = Quick.PositionInRange(mean, tradingRange.x, tradingRange.y);//double
+			    var favorability = Quick.PositionInRange(mean, tradingRange.Amount, tradingRange.Price);//double
 			    favorability = 1 - favorability;
 			    //do 1 - favorability to see how close we are to the low end
 
@@ -193,10 +193,10 @@ namespace EconomySim
 		    return 0;
 	    }
 
-	    private Point ObserveTradingRange(string good, int window)
+	    private PurchaseRecord ObserveTradingRange(string good, int window)
 	    {
 		    var a = ObservedTradingRange[good]; //List<double>
-		    var pt = new Point(Quick.MinArr(a,window), Quick.MaxArr(a,window));
+		    var pt = new PurchaseRecord(Quick.MinArr(a,window), Quick.MaxArr(a,window));
 		    return pt;
 	    }
     }

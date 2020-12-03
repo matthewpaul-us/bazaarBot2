@@ -5,21 +5,27 @@ using System.Text;
 
 namespace EconomySim
 {
+	/// <summary>
+	/// An inventory used by agents.
+	/// </summary>
     public class Inventory
     {
 	    public double maxSize = 0;
 
 	    //private static var _index:Map<String, Commodity>;
 
-	    private Dictionary<String, Point> stuff;		// key:commodity_id, val:amount, original_cost
+	    private Dictionary<String, PurchaseRecord> stuff;		// key:commodity_id, val:(x:amount, y:original_cost)
 	    private Dictionary<String, double> ideal;		// ideal counts for each thing
 	    private Dictionary<String, double> sizes;		// how much space each thing takes up
 
 
+		/// <summary>
+		/// Create an inventory to hold items.
+		/// </summary>
 	    public Inventory()
 	    {
 		    sizes = new Dictionary<String, double>();
-		    stuff = new Dictionary<String, Point>();
+		    stuff = new Dictionary<String, PurchaseRecord>();
 		    ideal = new Dictionary<String, double>();
 		    maxSize = 0;
 	    }
@@ -27,11 +33,11 @@ namespace EconomySim
 	    public void FromData(InventoryData data)
 	    {
 		    var sizes = new List<string>();
-		    var amountsp = new List<Point>();
+		    var amountsp = new List<PurchaseRecord>();
 		    foreach (string key in data.Start.Keys)
 		    {
 			    sizes.Add(key);
-			    amountsp.Add(new Point(data.Start[key],0));
+			    amountsp.Add(new PurchaseRecord(data.Start[key],0));
 		    }
 		    SetStuff(sizes, amountsp);
 		    sizes = new List<string>();
@@ -53,6 +59,9 @@ namespace EconomySim
 		    maxSize = data.MaxSize;
 	    }
 
+		/// <summary>
+		/// Prepares this inventory for cleanup.
+		/// </summary>
 	    public void Destroy()
 	    {
             stuff.Clear();
@@ -69,7 +78,7 @@ namespace EconomySim
 	     * @param	amounts_
 	     */
 
-	    public void SetStuff(List<String>stuff, List<Point>amounts)
+	    public void SetStuff(List<String>stuff, List<PurchaseRecord>amounts)
 	    {
 		    for (int i=0; i<stuff.Count; i++)
 		    {
@@ -99,46 +108,64 @@ namespace EconomySim
 		    }
 	    }
 
-	    /**
-	     * Returns how much of this
-	     * @param	commodity_ string id of commodity
-	     * @return
-	     */
-
+		/// <summary>
+		/// Returns how much of a specific good
+		/// </summary>
+		/// <param name="good">The good to check.</param>
+		/// <returns>The amount contained. Cannot be negative.</returns>
 	    public double Query(String good)
 	    {
 		    if (stuff.ContainsKey(good))
 		    {
-			    return stuff[good].x;
+			    return stuff[good].Amount;
 		    }
 		    return 0;
 	    }
+
+		/// <summary>
+		/// Returns the cost of a specific good
+		/// </summary>
+		/// <param name="good">The good to check.</param>
+		/// <returns>The original cost of the good. Cannot be negative</returns>
         public double QueryCost(String good)
         {
             if (stuff.ContainsKey(good))
             {
-                return stuff[good].y;
+                return stuff[good].Price;
             }
             return 0;
         }
 
+		/// <summary>
+		/// Gets the amount of free space the inventory has.
+		/// </summary>
+		/// <returns>Amount of space free</returns>
 	    public double GetEmptySpace()
 	    {
 		    return maxSize - GetUsedSpace();
 	    }
 
+		/// <summary>
+		/// Gets the amount of used space the inventory has.
+		/// </summary>
+		/// <returns>The count of all goods in the inventory, taking into account the size of the good.</returns>
 	    public double GetUsedSpace()
 	    {
 		    double space_used = 0;
 		    foreach (string key in stuff.Keys)
 		    {
                 if (!sizes.ContainsKey(key)) continue;
-			    space_used += stuff[key].x * sizes[key];
+			    space_used += stuff[key].Amount * sizes[key];
 		    }
 		    return space_used;
 	    }
 
-	    public double GetCapacityFor(string good)
+		/// <summary>
+		/// Gets the size of a good.
+		/// </summary>
+		/// <param name="good">The good to check the size of.</param>
+		/// <returns>The Size of the good</returns>
+	    public double GetSizeFor(string good)
 	    {
 		    if (sizes.ContainsKey(good))
 		    {
@@ -147,60 +174,60 @@ namespace EconomySim
 		    return -1;
 	    }
 
-	    /**
-	     * Change the amount of the given commodity by delta
-	     * @param	commodity_ string id of commodity
-	     * @param	delta_ amount added
-	     */
-
+		/// <summary>
+		/// Change the amount of the given good by delta amount.
+		/// </summary>
+		/// <param name="good">The good to change.</param>
+		/// <param name="delta">The amount to change the good by.</param>
+		/// <param name="unit_cost">The amount the delta was bought for. Leave as 0 or negative to use the old price.</param>
+		/// <returns>The current unit's cost.</returns>
 	    public double Change(string good, double delta, double unit_cost)
 	    {
-		    Point result = new Point(0,0);
+		    PurchaseRecord result = new PurchaseRecord(0,0);
 
 		    if (stuff.ContainsKey(good))
 		    {
 			    var amount = stuff[good];
                 if (unit_cost > 0)
                 {
-                    if (amount.x <= 0)
+                    if (amount.Amount <= 0)
                     {
-                        result.x = delta;
-                        result.y = unit_cost;
+                        result.Amount = delta;
+                        result.Price = unit_cost;
                     }
                     else
                     {
-                        result.y = (amount.x * amount.y + delta * unit_cost) / (amount.x + delta);
-                        result.x = amount.x + delta;
+						// The new buy price is the weighted average of the old and new price
+                        result.Price = (amount.Amount * amount.Price + delta * unit_cost) / (amount.Amount + delta);
+                        result.Amount = amount.Amount + delta;
                     }
                 }
                 else
                 {
-                    result.x = amount.x + delta;
-                    result.y = amount.y; //just copy from old value?
+                    result.Amount = amount.Amount + delta;
+                    result.Price = amount.Price; //just copy from old value?
                 }
 		    }
 		    else
 		    {
-			    result.x = delta;
-                result.y = unit_cost;
+			    result.Amount = delta;
+                result.Price = unit_cost;
 		    }
 
-		    if (result.x < 0)
+		    if (result.Amount < 0)
 		    {
-			    result.x = 0;
-                result.y = 0;
+			    result.Amount = 0;
+                result.Price = 0;
 		    }
 
 		    stuff[good] = result;
-            return result.y; //return current unit cost
+            return result.Price; //return current unit cost
 	    }
 
-	    /**
-	     * Returns # of units above the desired inventory level, or 0 if @ or below
-	     * @param	commodity_ string id of commodity
-	     * @return
-	     */
-
+		///<summary>
+		///	Returns number of units above the desired inventory level.
+		///</summary>
+		///<returns>Number of units above, or 0 if inventory is at level or below.</returns>
 	    public double Surplus(string good)
 	    {
 		    var amt = Query(good);
@@ -214,12 +241,8 @@ namespace EconomySim
 		    return 0;
 	    }
 
-	    /**
-	     * Returns # of units below the desired inventory level, or 0 if @ or above
-	     * @param	commodity_
-	     * @return
-	     */
-
+		///<summary>Returns number of units below the desired inventory level.</summary>
+		///<returns>Number of units below, or 0 if inventory is at level or above.</returns>
 	    public double Shortage(string good)
 	    {
 		    if (!stuff.ContainsKey(good))

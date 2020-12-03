@@ -63,7 +63,7 @@ namespace DoranAndParberryEconomySim
 		    {
 			    var shortage = Inventory.Shortage(commodity);
 			    var space = Inventory.GetEmptySpace();
-			    var unitSize = Inventory.GetCapacityFor(commodity);
+			    var unitSize = Inventory.GetSizeFor(commodity);
 
 			    if (shortage > 0 && space >= unitSize)
 			    {
