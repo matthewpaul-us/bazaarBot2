@@ -1,4 +1,5 @@
-﻿using EconomySim.Models;
+﻿using DoranAndParberryEconomySim;
+using EconomySim.Models;
 using LiveCharts;
 using LiveCharts.Configurations;
 using LiveCharts.Wpf;

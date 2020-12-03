@@ -1,9 +1,10 @@
-﻿using System;
+﻿using EconomySim;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EconomySim
+namespace DoranAndParberryEconomySim
 {    
     /**
      * An agent that performs the basic logic from the Doran & Parberry article

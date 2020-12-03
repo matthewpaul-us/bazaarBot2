@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Reflection;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
+using EconomySim;
 
-namespace EconomySim
+namespace DoranAndParberryEconomySim
 {
     public class DoranAndParberryEconomy : Economy
     {

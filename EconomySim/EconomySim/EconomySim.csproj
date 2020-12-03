@@ -143,6 +143,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DoranAndParberryEconomySim\DoranAndParberryEconomySim.csproj">
+      <Project>{e75bb0dc-4e8a-4e41-868f-40296c2c55ff}</Project>
+      <Name>DoranAndParberryEconomySim</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EconomySimLibrary\EconomySimLibrary.csproj">
       <Project>{152b40a5-feaf-4773-b50b-b8b94df01d4f}</Project>
       <Name>EconomySimLibrary</Name>

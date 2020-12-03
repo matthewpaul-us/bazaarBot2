@@ -1,10 +1,11 @@
-﻿using System;
+﻿using EconomySim;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EconomySim
+namespace DoranAndParberryEconomySim
 {
     class BlacksmithLogic : Logic
     {
