@@ -38,7 +38,7 @@ namespace DoranAndParberryEconomySim
 		    var askPrice = Inventory.QueryCost(commodity) * 1.02; //asks are fair prices:  costs + small profit
 
             var quantityToSell = Inventory.Query(commodity);//put asks out for all inventory
-            NProduct = quantityToSell;
+            NumProductToSell = quantityToSell;
 
 		    if (quantityToSell > 0)
 		    {

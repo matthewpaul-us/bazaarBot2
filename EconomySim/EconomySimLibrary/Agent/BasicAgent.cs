@@ -5,13 +5,25 @@ using System.Text;
 
 namespace EconomySim
 {
-    public class BasicAgent
+    public abstract class BasicAgent
     {
 
+		/// <summary>
+		/// Unique ID for the Agent
+		/// </summary>
 	    public int Id;				//unique integer identifier
+		/// <summary>
+		/// The type of Agent this is
+		/// </summary>
         public string ClassName { get; set; }	//string identifier, "famer", "woodcutter", etc.
+		/// <summary>
+		/// The amount of money the agent has.
+		/// </summary>
         public double Money { get; set; }
-        public double NProduct { get; set; }
+		/// <summary>
+		/// Amount of product to sell
+		/// </summary>
+        public double NumProductToSell { get; set; }
 
         //public var moneyLastRound(default, null):double;
         //public var profit(get, null):double;
@@ -29,7 +41,7 @@ namespace EconomySim
 	    private Logic logic;
 	    protected Inventory Inventory;
 	    protected Dictionary<string,List<double>> ObservedTradingRange;
-	    private int lookback = 15;
+	    private readonly int lookback = 15;
 
 
 	    public BasicAgent(int id, AgentData data)
@@ -90,27 +102,13 @@ namespace EconomySim
 		    logic.Perform(this, market);
 	    }
 
-        public virtual void GenerateOffers(Market bazaar, string good)
-	    {
-		    //no implemenation -- provide your own in a subclass
-	    }
+		public abstract void GenerateOffers(Market bazaar, string good);
 
-        public virtual void UpdatePriceModel(Market bazaar, string act, string good, bool success, double unitPrice = 0)
-	    {
-		    //no implementation -- provide your own in a subclass
-	    }
+		public abstract void UpdatePriceModel(Market bazaar, string act, string good, bool success, double unitPrice = 0);
 
-	    public virtual Offer CreateBid(Market bazaar, string good, double limit)
-	    {
-		    //no implementation -- provide your own in a subclass
-		    return null;
-	    }
+		public abstract Offer CreateBid(Market bazaar, string good, double limit);
 
-        public virtual Offer CreateAsk(Market bazaar, string commodity_, double limit_)
-	    {
-		    //no implementation -- provide your own in a subclass
-		    return null;
-	    }
+		public abstract Offer CreateAsk(Market bazaar, string commodity_, double limit_);
 
 	    public double QueryInventory(string good)
 	    {
@@ -154,11 +152,19 @@ namespace EconomySim
             }
         }
 
+		/// <summary>
+		/// Returns the profit of the agent. Calculated as the money on hand minus the money the agent had in the last round.
+		/// </summary>
+		/// <returns>The amount of money made in this round.</returns>
         public double GetProfit()
         {
             return Money - MoneyLastRound;
         }
 
+		/// <summary>
+		/// Gets whether or not the agent's inventory is full.
+		/// </summary>
+		/// <returns>True if agent has no space left. False otherwise.</returns>
         public bool GetInventoryFull()
         {
             return Inventory.GetEmptySpace() == 0;
@@ -169,7 +175,7 @@ namespace EconomySim
         protected double DeterminePurchaseQuantity(Market bazaar, string commodity)
 	    {
 		    var mean = bazaar.GetAverageHistoricalPrice(commodity,lookback);//double
-		    var tradingRange = observeTradingRange(commodity,10); //Point
+		    var tradingRange = ObserveTradingRange(commodity,10); //Point
 
 		    if (tradingRange != null)
 		    {
@@ -187,7 +193,7 @@ namespace EconomySim
 		    return 0;
 	    }
 
-	    private Point observeTradingRange(string good, int window)
+	    private Point ObserveTradingRange(string good, int window)
 	    {
 		    var a = ObservedTradingRange[good]; //List<double>
 		    var pt = new Point(Quick.MinArr(a,window), Quick.MaxArr(a,window));
